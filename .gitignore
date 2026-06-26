@@ -1,0 +1,29 @@
+# Secretos — nunca en git
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.log
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Bases de datos locales
+*.sqlite
+*.db
+
+# Frontend (Fase 4)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# SO / IDEs
+.DS_Store
+Thumbs.db
+.idea/
