@@ -2,7 +2,7 @@
 
 > Documento de continuidad. Léelo junto a `CLAUDE.md` (y `BackendBarberia.md`) para retomar el proyecto en cualquier chat.
 
-> **ESTADO ACTUAL: 🟢 FASE 1 COMPLETADA.** Backend RM integrado en el repo combinado. 127/127 tests en verde. Primer commit limpio creado.
+> **ESTADO ACTUAL: 🟢 FASE 1 COMPLETADA Y VERIFICADA.** Backend RM integrado. 127/127 tests en verde. 8 migraciones Alembic aplicadas sobre PostgreSQL Docker sin error. Seed idempotente verificado (doble ejecución). Endpoint de salud 200 OK. Título Swagger correcto.
 
 ## Qué es
 
@@ -95,17 +95,19 @@ pip install -r requirements.txt
 
 ---
 
-## Verificación pendiente (necesita Docker Desktop corriendo)
+## Verificación completada (2026-06-26)
 
-```bash
-# Desde la raíz del proyecto:
-docker compose up -d
-cd backend && alembic upgrade head   # 7 migraciones sobre BD vacía
-python seed.py                       # 2 admins idempotentes
-alembic current                      # muestra revisión HEAD
+```
+alembic upgrade head  → 8 migraciones OK (initial_schema … excepcion_fecha)
+alembic current       → c3d4e5f6a1b2 (head)
+seed.py ×2            → 1ª crea 2 admins; 2ª "ya existe — rol verificado" ×2
+GET /health           → 200 {"status":"ok"}
+GET /docs             → título "πίστη API" confirmado
 ```
 
-Docker Desktop no estaba activo en la sesión de integración. El test de migraciones sobre PostgreSQL real está pendiente de ejecución con Docker corriendo.
+**Nota local**: el servicio `postgresql-x64-18` (Windows) también usa el puerto 5432.
+Pararlo antes de levantar el contenedor Docker: `Stop-Service postgresql-x64-18` (requiere admin).
+Volver a arrancarlo al terminar: `Start-Service postgresql-x64-18`.
 
 ---
 
@@ -117,6 +119,6 @@ Ver `METODOLOGIA.md`. Resumen: **Fase 0 de diseño en Claude Design** → planif
 
 ## Siguiente paso
 
-1. Arrancar Docker Desktop y ejecutar la **verificación de Alembic + seed** (ver sección "Verificación pendiente").
-2. Decidir si arrancar **Fase 0 (diseño visual)** o **Fase 3 (módulo tienda)** directamente.
-3. Resolver las **decisiones abiertas** (imágenes, tallas, stock, recordatorio, identidad de marca).
+1. Decidir si arrancar **Fase 0 (diseño visual en Claude Design)** o **Fase 3 (módulo tienda)** directamente.
+2. Resolver las **decisiones abiertas** (imágenes, tallas, stock, recordatorio, identidad de marca).
+3. Recordar parar el servicio `postgresql-x64-18` antes de cada sesión de desarrollo local con Docker.
