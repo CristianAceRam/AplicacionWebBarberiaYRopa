@@ -11,6 +11,46 @@ Está pensada primero para móvil y es responsive. Solo tiene tema oscuro, con u
 
 ---
 
+## 📸 Capturas
+
+<p align="center">
+  <img src="docs/capturas/hub-portada.png" width="60%" alt="Portada de πίστη: wordmark metálico con brillo blanco sobre fondo negro y la puerta de entrada a la Barbería">
+  <br>
+  <sub><b>Público</b> · portada con el wordmark metálico (WebGL) y las entradas a los dos mundos</sub>
+</p>
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/capturas/hub-banner.png" alt="Tarjetas de Barbería y Tienda con borde LED verde, cinta de redes sociales y cinta de galería con fotos de camisetas y del local">
+      <br><sub><b>Público</b> · hub con las puertas Barbería / Tienda y el banner de redes + galería</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/capturas/cliente-reservar-cita.png" alt="Asistente de reserva de cita en pasos: servicio seleccionado, calendario del mes y barra de navegación inferior">
+      <br><sub><b>Cliente</b> · reservar cita en un solo paso a paso (servicio → fecha → hora)</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/capturas/admin-resumen.png" alt="Panel de administración con métricas: pendientes de atención, citas de hoy, reservas pendientes y clientes a vigilar">
+      <br><sub><b>Admin</b> · resumen con las métricas del negocio</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/capturas/admin-menu.png" alt="Menú lateral del panel admin agrupado en Inicio, Barbería, Tienda y Sitio">
+      <br><sub><b>Admin</b> · menú de gestión: barbería, tienda y sitio</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/capturas/admin-prendas.png" alt="Catálogo de prendas del admin con filtro Todas / Visibles / Ocultas y una camiseta con acciones Editar, Desactivar y Borrar">
+      <br><sub><b>Admin</b> · catálogo de prendas con visibilidad y borrado</sub>
+    </td>
+    <td width="50%"></td>
+  </tr>
+</table>
+
+---
+
 ## Stack
 
 | Capa | Tecnología |
@@ -40,7 +80,7 @@ Está pensada primero para móvil y es responsive. Solo tiene tema oscuro, con u
 - **Barbería**: agenda diaria (marcar "no asistió" y cancelar), servicios, horario semanal con jornada partida, días cerrados y aperturas excepcionales, y clientes (inasistencias, bloquear y desbloquear).
 - **Tienda**: prendas (CRUD, tallas con disponibilidad, hasta 8 imágenes por prenda que se pueden reordenar) y reservas (atender, cancelar, deshacer "atendida").
 - **Sitio**: galería del banner (subir, reordenar y borrar).
-- **Resumen**: endpoint de estadísticas `GET /admin/stats`.
+- **Resumen**: métricas del negocio (citas de hoy y de la semana, reservas pendientes, clientes a vigilar) servidas por `GET /admin/stats`.
 
 ---
 
@@ -167,7 +207,6 @@ Los secretos van **solo** en variables de entorno y **nunca** en el repositorio.
 
 Backend de barbería y tienda terminado. Frontend terminado en la parte del cliente y en el panel de gestión. Queda pendiente:
 
-- Frontend del dashboard (el endpoint de estadísticas ya existe).
 - Contenido gestionable de la pantalla de Contacto.
 - **Fase 5**: despliegue en Render (pre-deploy con `alembic upgrade head`, crons y dominio).
 
