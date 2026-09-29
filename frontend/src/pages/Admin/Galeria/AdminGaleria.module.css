@@ -1,0 +1,225 @@
+.wrap {
+  padding: 1.5rem 1.25rem 3rem;
+  max-width: 560px;
+}
+
+/* ── Cabecera ── */
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.titulo {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+  margin: 0;
+}
+
+/* ── Subida ── */
+
+.fileLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  color: var(--dim);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  cursor: pointer;
+  transition: border-color 150ms;
+  user-select: none;
+  width: fit-content;
+  position: relative;
+}
+
+.fileLabelDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .fileLabel:not(.fileLabelDisabled):hover {
+    border-color: var(--dim);
+    color: var(--text);
+  }
+}
+
+.fileLabel:focus-within {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-color: var(--neon);
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.ledIndicador {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon);
+  animation: ledPulso 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes ledPulso {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1;   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledIndicador { animation: none; opacity: 1; }
+}
+
+/* ── Mensajes globales ── */
+
+.errorSubida {
+  font-size: var(--fs-small);
+  color: var(--error);
+  margin: 0 0 0.75rem;
+}
+
+.topeMsg {
+  font-size: var(--fs-small);
+  color: var(--faint);
+  margin: 0 0 0.75rem;
+}
+
+.errorReorden {
+  font-size: var(--fs-small);
+  color: var(--error);
+  margin: 0 0 0.5rem;
+}
+
+/* ── Estado vacío ── */
+
+.estadoVacio {
+  padding: 2.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.estadoVacio p {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--faint);
+}
+
+.estadoVacio p:first-child {
+  color: var(--dim);
+  font-weight: var(--fw-medium);
+}
+
+/* ── Grid de fotos ── */
+
+.fotosGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.fotoItem {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.fotoThumb {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.fotoMiniatura {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Controles de foto ── */
+
+.fotoControles {
+  display: flex;
+  border-top: 1px solid var(--line);
+}
+
+.btnControl {
+  flex: 1;
+  min-height: 44px;
+  background: var(--surface2);
+  border: none;
+  border-right: 1px solid var(--line);
+  color: var(--dim);
+  font-size: var(--fs-small);
+  cursor: pointer;
+  transition: color 150ms, background 150ms;
+  padding: 0;
+}
+
+.btnControl:last-child {
+  border-right: none;
+}
+
+.btnControl:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .btnControl:not(:disabled):hover {
+    color: var(--text);
+    background: var(--surface);
+  }
+}
+
+.btnControl:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  position: relative;
+  z-index: 1;
+}
+
+.btnBorrar:not(:disabled):hover { color: var(--error); }
+
+.btnCancelarBorrar {
+  color: var(--dim);
+}
+
+.btnConfirmarBorrar {
+  color: var(--error);
+  font-weight: var(--fw-medium);
+}
+
+.btnConfirmarBorrar:not(:disabled):hover {
+  background: color-mix(in srgb, var(--error) 12%, var(--surface2));
+}
+
+.errorBorradoItem {
+  font-size: var(--fs-small);
+  color: var(--error);
+  padding: 0.25rem 0.5rem;
+  background: var(--surface2);
+  border-top: 1px solid var(--line);
+  margin: 0;
+}

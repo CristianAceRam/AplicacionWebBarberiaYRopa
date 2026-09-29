@@ -1,0 +1,18 @@
+.wrap {
+  padding: 2rem 1.25rem;
+  max-width: 480px;
+}
+
+.titulo {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+  margin: 0 0 1rem;
+}
+
+.descripcion {
+  font-size: var(--fs-body);
+  color: var(--dim);
+  line-height: 1.6;
+  margin: 0;
+}

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.constants import DIAS_MAX_RESERVA, FRANJA_MINUTOS
 from app.database import get_db
 from app.dependencies import get_usuario_actual
-from app.models import ExcepcionFecha, FranjaOcupada, HorarioPeluquero, Servicio, TipoExcepcion, Usuario
+from app.models import ExcepcionFecha, FranjaOcupada, HorarioPeluquero, Servicio, TipoExcepcion, TramoApertura, Usuario
 from app.schemas import DisponibilidadRead
 
 router = APIRouter(tags=["disponibilidad"])
@@ -83,16 +83,23 @@ def consultar_disponibilidad(
     if db.query(ExcepcionFecha).filter_by(fecha=fecha, tipo=TipoExcepcion.cerrado).first():
         return DisponibilidadRead(fecha=fecha, servicio_id=servicio_id, horas_disponibles=[])
 
-    # Buscar todos los tramos del día de la semana
-    dia_semana = fecha.weekday()
-    tramos = (
-        db.query(HorarioPeluquero)
-        .filter_by(dia_semana=dia_semana)
-        .order_by(HorarioPeluquero.hora_apertura)
-        .all()
-    )
-    if not tramos:
-        return DisponibilidadRead(fecha=fecha, servicio_id=servicio_id, horas_disponibles=[])
+    # Apertura excepcional: sus tramos sustituyen al horario semanal
+    apertura_exc = db.query(ExcepcionFecha).filter_by(fecha=fecha, tipo=TipoExcepcion.abierto).first()
+    if apertura_exc:
+        tramos = apertura_exc.tramos  # ordenados por hora_apertura (order_by en relationship)
+        if not tramos:
+            return DisponibilidadRead(fecha=fecha, servicio_id=servicio_id, horas_disponibles=[])
+    else:
+        # Horario semanal normal
+        dia_semana = fecha.weekday()
+        tramos = (
+            db.query(HorarioPeluquero)
+            .filter_by(dia_semana=dia_semana)
+            .order_by(HorarioPeluquero.hora_apertura)
+            .all()
+        )
+        if not tramos:
+            return DisponibilidadRead(fecha=fecha, servicio_id=servicio_id, horas_disponibles=[])
 
     # Franjas ya ocupadas ese día (una sola consulta)
     ocupadas = {
@@ -100,13 +107,12 @@ def consultar_disponibilidad(
         for row in db.query(FranjaOcupada).filter(FranjaOcupada.fecha == fecha).all()
     }
 
-    from datetime import date as _date
     ahora_t = now_madrid.time() if fecha == today_madrid else None
 
     horas = []
     for tramo in tramos:
-        base      = datetime.combine(_date.min, tramo.hora_apertura)
-        cierre_dt = datetime.combine(_date.min, tramo.hora_cierre)
+        base      = datetime.combine(date.min, tramo.hora_apertura)
+        cierre_dt = datetime.combine(date.min, tramo.hora_cierre)
         horas.extend(_calcular_disponibles(
             apertura=base,
             cierre=cierre_dt,

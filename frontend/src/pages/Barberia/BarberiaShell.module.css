@@ -1,0 +1,62 @@
+.shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Cabecera con logo → hub ── */
+.shellHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.logoLink {
+  display: inline-flex;
+  border-radius: var(--r);
+  transition: filter 160ms;
+}
+
+.logoLink:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ── Contenido principal ── */
+.content {
+  flex: 1;
+  padding: 1.5rem 1.25rem;
+  /* Espacio para el Nav inferior en móvil (≈72px) */
+  padding-bottom: calc(1.5rem + 72px);
+}
+
+@media (min-width: 768px) {
+  .shellHeader {
+    margin-left: 80px;
+  }
+
+  .content {
+    margin-left: 80px;
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* ── Placeholder de pantalla ── */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.placeholderText {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-mono);
+  color: var(--faint);
+}

@@ -1,11 +1,12 @@
 import re
-from datetime import date, time
+from datetime import date, datetime, time
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from app.constants import DURACION_MAX_MINUTOS, FRANJA_MINUTOS
-from app.models import EstadoCita
+from app.models import EstadoCita, EstadoReservaPrenda
 
 # Letras latinas con tildes/acentos, ñ y caracteres europeos comunes, más espacio, guión y apóstrofo
 _NOMBRE_RE = re.compile(
@@ -269,13 +270,244 @@ class DisponibilidadRead(BaseModel):
 # Excepciones de fecha
 # ---------------------------------------------------------------------------
 
-class ExcepcionFechaCreate(BaseModel):
-    fecha: date
+class TramoAperturaIn(BaseModel):
+    hora_apertura: time
+    hora_cierre:   time
     model_config = {"extra": "forbid"}
+
+    @model_validator(mode="after")
+    def validar_rango(self) -> "TramoAperturaIn":
+        if self.hora_cierre <= self.hora_apertura:
+            raise ValueError("hora_cierre debe ser posterior a hora_apertura")
+        for h in (self.hora_apertura, self.hora_cierre):
+            if h.minute % FRANJA_MINUTOS != 0 or h.second != 0:
+                raise ValueError(
+                    f"Las horas de los tramos deben ser múltiplos de {FRANJA_MINUTOS} min "
+                    f"(p. ej. 09:00, 09:30, 20:00)"
+                )
+        return self
+
+
+class TramoAperturaRead(BaseModel):
+    id:            int
+    hora_apertura: time
+    hora_cierre:   time
+    model_config = {"from_attributes": True}
+
+
+class ExcepcionFechaCreate(BaseModel):
+    fecha:  date
+    tipo:   Literal["cerrado", "abierto"] = "cerrado"
+    tramos: list[TramoAperturaIn] = []
+    model_config = {"extra": "forbid"}
+
+    @model_validator(mode="after")
+    def validar_tramos_segun_tipo(self) -> "ExcepcionFechaCreate":
+        if self.tipo == "abierto":
+            if not self.tramos:
+                raise ValueError("Una apertura excepcional debe tener al menos un tramo horario")
+            sorted_t = sorted(self.tramos, key=lambda t: t.hora_apertura)
+            for i in range(len(sorted_t) - 1):
+                if sorted_t[i].hora_cierre > sorted_t[i + 1].hora_apertura:
+                    raise ValueError("Los tramos de apertura no pueden solaparse")
+        elif self.tramos:
+            raise ValueError("Un cierre no puede llevar tramos horarios")
+        return self
 
 
 class ExcepcionFechaRead(BaseModel):
-    id    : int
-    fecha : date
-    tipo  : str
+    id:     int
+    fecha:  date
+    tipo:   str
+    tramos: list[TramoAperturaRead] = []
     model_config = {"from_attributes": True}
+
+
+# ---------------------------------------------------------------------------
+# Cloudinary — firma de subida
+# ---------------------------------------------------------------------------
+
+class FirmaRequest(BaseModel):
+    folder: str = Field(min_length=1, max_length=100)
+    model_config = {"extra": "forbid"}
+
+
+class FirmaResponse(BaseModel):
+    signature:       str
+    timestamp:       int
+    api_key:         str
+    cloud_name:      str
+    folder:          str
+    allowed_formats: str
+    max_file_size:   int
+
+
+# ---------------------------------------------------------------------------
+# Tienda — catálogo
+# ---------------------------------------------------------------------------
+
+class TallaRead(BaseModel):
+    id:         int
+    talla:      str
+    disponible: bool
+    model_config = {"from_attributes": True}
+
+
+class TallaCreate(BaseModel):
+    talla:      str = Field(min_length=1, max_length=20)
+    disponible: bool = True
+    model_config = {"extra": "forbid"}
+
+
+class TallaUpdate(BaseModel):
+    disponible: bool
+    model_config = {"extra": "forbid"}
+
+
+class ImagenRead(BaseModel):
+    id:       int
+    url:      str
+    posicion: int
+    model_config = {"from_attributes": True}
+
+
+class ImagenCreate(BaseModel):
+    url:       str = Field(min_length=1, max_length=512)
+    public_id: str = Field(min_length=1, max_length=200)
+    posicion:  int | None = None
+    model_config = {"extra": "forbid"}
+
+
+class ImagenUpdate(BaseModel):
+    posicion: int
+    model_config = {"extra": "forbid"}
+
+
+class ImagenOrdenItem(BaseModel):
+    id:       int
+    posicion: int
+
+
+class PrendaCreate(BaseModel):
+    nombre:      str = Field(min_length=1, max_length=200)
+    descripcion: str = Field(min_length=1, max_length=2000)
+    precio:      Decimal = Field(ge=0)
+    categoria:   str | None = Field(default=None, max_length=100)
+    model_config = {"extra": "forbid"}
+
+
+class PrendaUpdate(BaseModel):
+    nombre:      str | None = Field(default=None, min_length=1, max_length=200)
+    descripcion: str | None = Field(default=None, min_length=1, max_length=2000)
+    precio:      Decimal | None = Field(default=None, ge=0)
+    categoria:   str | None = Field(default=None, max_length=100)
+    activo:      bool | None = None
+    model_config = {"extra": "forbid"}
+
+
+class _PrendaBase(BaseModel):
+    id:             int
+    nombre:         str
+    precio:         Decimal
+    categoria:      str | None
+    activo:         bool
+    primera_imagen: ImagenRead | None
+    tallas:         list[TallaRead]
+    model_config = {"from_attributes": True}
+
+
+class PrendaListaRead(_PrendaBase):
+    pass
+
+
+class PrendaDetalleRead(_PrendaBase):
+    descripcion: str
+    imagenes:    list[ImagenRead]
+
+
+# ---------------------------------------------------------------------------
+# Tienda — reservas
+# ---------------------------------------------------------------------------
+
+class ReservaCreate(BaseModel):
+    prenda_id: int = Field(gt=0)
+    talla:     str = Field(min_length=1, max_length=20)
+    model_config = {"extra": "forbid"}
+
+
+class _PrendaResumen(BaseModel):
+    id:     int
+    nombre: str
+    precio: Decimal
+    model_config = {"from_attributes": True}
+
+
+class ReservaReadCliente(BaseModel):
+    id:        int
+    prenda_id: int
+    talla:     str
+    estado:    EstadoReservaPrenda
+    creada_en: datetime
+    prenda:    _PrendaResumen
+    model_config = {"from_attributes": True}
+
+
+class _ClienteResumen(BaseModel):
+    nombre_completo: str
+    telefono:        str
+    model_config = {"from_attributes": True}
+
+
+class ReservaReadAdmin(BaseModel):
+    id:        int
+    prenda_id: int
+    talla:     str
+    estado:    EstadoReservaPrenda
+    creada_en: datetime
+    prenda:    _PrendaResumen
+    cliente:   _ClienteResumen
+    model_config = {"from_attributes": True}
+
+
+# ---------------------------------------------------------------------------
+# Galería del banner
+# ---------------------------------------------------------------------------
+
+class GaleriaFotoCreate(BaseModel):
+    url:       str = Field(min_length=1, max_length=512)
+    public_id: str = Field(min_length=1, max_length=200)
+    posicion:  int | None = None
+    titulo:    str | None = Field(default=None, max_length=200)
+    model_config = {"extra": "forbid"}
+
+
+class GaleriaFotoUpdate(BaseModel):
+    posicion: int | None = None
+    titulo:   str | None = Field(default=None, max_length=200)
+    model_config = {"extra": "forbid"}
+
+
+class GaleriaFotoRead(BaseModel):
+    id:       int
+    url:      str
+    posicion: int
+    titulo:   str | None
+    model_config = {"from_attributes": True}
+
+
+class GaleriaOrdenItem(BaseModel):
+    id:       int
+    posicion: int
+
+
+# ---------------------------------------------------------------------------
+# Admin — estadísticas del dashboard
+# ---------------------------------------------------------------------------
+
+class AdminStats(BaseModel):
+    citas_hoy:           int
+    citas_semana:        int
+    clientes_atencion:   int
+    reservas_pendientes: int
+    reservas_semana:     int
+    pendientes_atencion: int

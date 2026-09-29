@@ -1,0 +1,73 @@
+/* ── Grid plano (sin categorías) ── */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* ── Con categorías: secciones con rieles horizontales ── */
+
+.catalogo {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.seccionTitulo {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-mono);
+  color: var(--dim);
+}
+
+/* Riel horizontal en móvil — scroll finito, sin fade que recorte la última tarjeta */
+.rail {
+  display: flex;
+  gap: 0.875rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+  /* padding-right generoso: asoma el borde de la siguiente tarjeta */
+  padding-right: 1.5rem;
+  /* Ocultar scrollbar visual pero mantener funcionalidad */
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ancho fijo de tarjeta en el riel móvil */
+.rail > * {
+  width: 160px;
+}
+
+/* Desktop: el riel pasa a grid fluido */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    overflow-x: visible;
+    padding-right: 0;
+    padding-bottom: 0;
+    scroll-snap-type: none;
+  }
+
+  .rail > * {
+    width: auto;
+  }
+}

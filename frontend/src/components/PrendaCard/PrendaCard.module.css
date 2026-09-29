@@ -1,0 +1,140 @@
+/* ── Tarjeta de prenda — escaparate de tienda ── */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  text-decoration: none;
+  color: var(--text);
+  position: relative;
+  /* width fijado por el padre (rail o grid) */
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  transition: border-color 150ms;
+}
+
+/* ── Pulso respiración — técnica ::after (evita conflicto con hover) ── */
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--r);
+  border: 1px solid var(--neon);
+  box-shadow: var(--shadow-glow-green);
+  opacity: 0;
+  pointer-events: none;
+  animation: cardBreath 4s ease-in-out infinite;
+}
+
+.card:nth-child(3n+1)::after { animation-delay: 0s; }
+.card:nth-child(3n+2)::after { animation-delay: 1.3s; }
+.card:nth-child(3n+3)::after { animation-delay: 2.6s; }
+
+@keyframes cardBreath {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: 0.65; }
+}
+
+@media (hover: hover) {
+  .card:hover::after {
+    animation-play-state: paused;
+    opacity: 0.65;
+  }
+}
+
+.card:active::after {
+  animation-play-state: paused;
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ── Imagen ── */
+
+.imgWrap {
+  overflow: hidden;
+  border-radius: var(--r) var(--r) 0 0;
+}
+
+.img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  background: var(--surface2);
+}
+
+.imgFallback {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--line);
+}
+
+.piSym {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  color: var(--faint);
+  user-select: none;
+}
+
+/* ── Info (nombre, precio, tallas) ── */
+
+.info {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.nombre {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semi);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.precio {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  color: var(--text);
+}
+
+.tallas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.125rem;
+}
+
+.talla {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: var(--letter-mono);
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.tallaAgotada {
+  text-decoration: line-through;
+  color: var(--faint);
+  opacity: 0.5;
+}

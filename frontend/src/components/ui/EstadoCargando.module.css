@@ -1,0 +1,50 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1.25rem;
+}
+
+/* Tira LED que recorre la barra de izquierda a derecha */
+.bar {
+  position: relative;
+  width: min(280px, 80%);
+  height: 2px;
+  background: var(--line);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, var(--neon), transparent);
+  filter: var(--filter-glow-white);
+  animation: ledScan 1.4s ease-in-out infinite;
+}
+
+@keyframes ledScan {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(430%); }
+}
+
+.texto {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar::after {
+    animation: none;
+    opacity: 0;
+  }
+}

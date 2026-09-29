@@ -9,7 +9,11 @@ from sqlalchemy.pool import StaticPool
 
 from app.database import Base, get_db
 from app.main import app
-from app.models import Cita, ExcepcionFecha, FranjaOcupada, HorarioPeluquero, Rol, Servicio, TipoExcepcion, Usuario
+from app.models import (
+    Cita, ExcepcionFecha, FranjaOcupada, GaleriaFoto, HorarioPeluquero,
+    ImagenPrenda, Prenda, ReservaPrenda, Rol, Servicio, TallaPrenda, TipoExcepcion,
+    TramoApertura, Usuario,
+)
 from app.security import create_access_token, hash_password
 
 
@@ -55,6 +59,15 @@ def db_session():
 
         # excepcion_fecha: ORM directo (UNIQUE(fecha) compatible con SQLite)
         ExcepcionFecha.__table__.create(bind=conn)
+        # tramos_apertura: FK a excepcion_fecha — después de ésta
+        TramoApertura.__table__.create(bind=conn)
+
+        # ── Tienda (Fase 3) ───────────────────────────────────────────────
+        Prenda.__table__.create(bind=conn)
+        TallaPrenda.__table__.create(bind=conn)
+        ImagenPrenda.__table__.create(bind=conn)
+        ReservaPrenda.__table__.create(bind=conn)
+        GaleriaFoto.__table__.create(bind=conn)
 
         conn.commit()
 
@@ -165,3 +178,60 @@ def horario_dia(db_session, fecha_test) -> HorarioPeluquero:
     db_session.commit()
     db_session.refresh(h)
     return h
+
+
+# ---------------------------------------------------------------------------
+# Fixtures tienda — Fase 3
+# ---------------------------------------------------------------------------
+
+@pytest.fixture()
+def cliente2_token(db_session):
+    """Token JWT de un segundo cliente (para tests de IDOR y multi-reserva)."""
+    cliente2 = Usuario(
+        email="cli2@test.com",
+        password_hash=hash_password("clientepass123"),
+        telefono="600000002",
+        nombre_completo="Cliente Dos",
+        rol=Rol.cliente,
+    )
+    db_session.add(cliente2)
+    db_session.commit()
+    db_session.refresh(cliente2)
+    return create_access_token(cliente2.id, cliente2.rol.value)
+
+
+@pytest.fixture()
+def cliente_bloqueado_token(db_session):
+    """Token JWT de un cliente bloqueado."""
+    bloqueado = Usuario(
+        email="bloq@test.com",
+        password_hash=hash_password("clientepass123"),
+        telefono="600000003",
+        nombre_completo="Cliente Bloqueado",
+        rol=Rol.cliente,
+        bloqueado=True,
+    )
+    db_session.add(bloqueado)
+    db_session.commit()
+    db_session.refresh(bloqueado)
+    return create_access_token(bloqueado.id, bloqueado.rol.value)
+
+
+@pytest.fixture()
+def prenda(db_session) -> Prenda:
+    """Prenda activa con una talla disponible ('M') y una imagen."""
+    p = Prenda(
+        nombre="Camiseta πίστη",
+        descripcion="Camiseta de algodón marca πίστη",
+        precio=Decimal("29.99"),
+        categoria="Camisetas",
+        activo=True,
+    )
+    db_session.add(p)
+    db_session.flush()
+    t = TallaPrenda(prenda_id=p.id, talla="M", disponible=True)
+    img = ImagenPrenda(prenda_id=p.id, url="https://res.cloudinary.com/test/image/upload/v1/test.jpg", public_id="test/test", posicion=0)
+    db_session.add_all([t, img])
+    db_session.commit()
+    db_session.refresh(p)
+    return p

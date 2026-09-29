@@ -1,0 +1,146 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Botón del nombre cuando hay sesión */
+.chipBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 44px;
+  padding: 0 0.5rem;
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--letter-mono);
+  cursor: pointer;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 150ms;
+}
+
+@media (hover: hover) {
+  .chipBtn:hover {
+    color: var(--text);
+  }
+}
+
+.chipBtn:active {
+  color: var(--text);
+}
+
+.chipBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r);
+}
+
+.chevron {
+  color: var(--faint);
+  font-size: 0.7em;
+  flex-shrink: 0;
+}
+
+/* Link "Acceder" cuando no hay sesión */
+.acceder {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.875rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  color: var(--dim);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  transition: border-color 150ms, color 150ms;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .acceder:hover {
+    border-color: var(--neon);
+    color: var(--text);
+  }
+}
+
+.acceder:active {
+  border-color: var(--neon);
+  color: var(--text);
+}
+
+.acceder:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Mini-menú desplegable */
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: var(--rlg);
+  min-width: 10rem;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: var(--dim);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 120ms, color 120ms;
+}
+
+@media (hover: hover) {
+  .menuItem:hover {
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .menuItemSalir:hover {
+    color: var(--error);
+  }
+
+  .menuItemAdmin:hover {
+    color: var(--text);
+  }
+}
+
+.menuItem:active {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.menuItemSalir:active {
+  color: var(--error);
+}
+
+.menuItem:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chipBtn,
+  .acceder,
+  .menuItem {
+    transition: none;
+  }
+}

@@ -1,0 +1,224 @@
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem 1.25rem;
+  box-sizing: border-box;
+}
+
+/* ── Volver al hub ── */
+.backLink {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.25rem;
+  font-size: var(--fs-small);
+  color: var(--dim);
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+@media (hover: hover) {
+  .backLink:hover {
+    color: var(--text);
+  }
+}
+
+.backLink:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r);
+}
+
+/* ── Wordmark hero (mismo rol que en Hub) ── */
+.logoArea {
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Card del formulario ── */
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--rlg);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Heading con Blur Text ── */
+.heading {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  text-align: center;
+  animation: blurReveal 600ms ease-out both;
+}
+
+@keyframes blurReveal {
+  from { filter: blur(12px); opacity: 0; }
+  to   { filter: blur(0);    opacity: 1; }
+}
+
+/* ── Formulario ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Campos con fadeUp en cascada */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  color: var(--dim);
+}
+
+.input {
+  height: 44px;
+  padding: 0 0.875rem;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  transition: border-color 150ms;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--neon);
+  box-shadow: var(--shadow-focus);
+}
+
+.input--error {
+  border-color: var(--error);
+}
+
+.passwordWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input--password {
+  padding-right: 5.5rem;
+}
+
+.showPassBtn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--faint);
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  padding: 0.25rem;
+  min-height: 44px;
+  transition: color 150ms;
+}
+
+@media (hover: hover) {
+  .showPassBtn:hover {
+    color: var(--dim);
+  }
+}
+
+.showPassBtn:active {
+  color: var(--dim);
+}
+
+.showPassBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r);
+}
+
+.errorMsg {
+  font-size: var(--fs-small);
+  color: var(--error);
+  text-align: center;
+}
+
+.submitWrap {
+  margin-top: 0.5rem;
+}
+
+/* ── Footer ── */
+.footer {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--dim);
+}
+
+.footerLink {
+  color: var(--neon);
+  text-decoration: none;
+  font-weight: var(--fw-medium);
+}
+
+@media (hover: hover) {
+  .footerLink:hover {
+    text-decoration: underline;
+  }
+}
+
+.footerLink:active {
+  text-decoration: underline;
+}
+
+.footerLink:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r);
+}
+
+/* ── FadeUp para los campos (cascada "entrando en foco") ── */
+.fadeUp {
+  animation: fadeUp 300ms ease-out both;
+  animation-delay: 150ms;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── prefers-reduced-motion: elimina animaciones + delays de raíz ── */
+/* El global animation-duration:0.01ms trunca la duración pero NO el delay,  */
+/* lo que dejaría los campos invisibles durante animation-delay. Esto lo sana. */
+@media (prefers-reduced-motion: reduce) {
+  .heading,
+  .fadeUp {
+    animation: none;
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}

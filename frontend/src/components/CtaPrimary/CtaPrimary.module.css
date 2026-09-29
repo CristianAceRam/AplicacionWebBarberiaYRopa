@@ -1,0 +1,106 @@
+/* ── CTA principal — luz que recorre el borde en reposo ─────── */
+
+.cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;  /* toque ≥44px */
+  min-width: 44px;
+  padding: 12px 28px;
+  border-radius: var(--r);
+  border: none;
+  cursor: pointer;
+
+  /* Superficie del botón */
+  background: var(--surface2);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semi);
+
+  /* Fallback @property: borde verde estático visible siempre */
+  outline: 1px solid var(--neon);
+
+  /* Texto sobre la capa animada */
+  isolation: isolate;
+  overflow: hidden;
+
+  transition: background 150ms ease, color 150ms ease;
+}
+
+/*
+  Capa con conic-gradient animado — solo el borde (1px) es visible.
+  Técnica de máscara: "punch out" del interior, deja solo el contorno.
+
+  @property --border-angle definido en theme.css.
+  Fallback: ::before no se anima pero el outline estático cubre el caso.
+*/
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r);
+  padding: 1px; /* grosor del borde viajero */
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0%,
+    var(--neon) 15%,
+    transparent 30%
+  );
+  /* Máscara: solo se ve el "padding" (1px borde); interior transparente */
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+
+  animation: ctaBorderRotate 2.4s linear infinite;
+  animation-play-state: running;
+  will-change: --border-angle;
+  pointer-events: none;
+}
+
+/* Pausa cuando el CTA sale del viewport (via useLedVisible) */
+.cta--paused::before {
+  animation-play-state: paused;
+}
+
+/* Desktop: relleno neón + tinta negra en hover */
+@media (hover: hover) {
+  .cta:hover:not(:disabled) {
+    background: var(--neon);
+    color: var(--onNeon);
+    outline-color: var(--neon);
+  }
+}
+
+/* Activo / pulsado — feedback táctil completo en móvil */
+.cta:active:not(:disabled) {
+  transform: scale(0.98);
+  background: var(--neon);
+  color: var(--onNeon);
+}
+
+/* Deshabilitado */
+.cta:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.cta:disabled::before {
+  animation-play-state: paused;
+}
+
+/* Foco de teclado — sobreescribe el outline con el anillo LED de theme.css */
+.cta:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.label {
+  position: relative; /* sobre la capa ::before */
+  z-index: 1;
+}

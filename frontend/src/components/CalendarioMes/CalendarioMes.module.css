@@ -1,0 +1,135 @@
+/* Extraído de ReservarCita.module.css — estilos del calendario del mes */
+
+.calendario {
+  user-select: none;
+}
+
+.calHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.calMesLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--letter-mono);
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.calNavBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  color: var(--dim);
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+}
+
+.calNavBtn:hover:not(:disabled) {
+  border-color: var(--lineStrong);
+  color: var(--text);
+}
+
+.calNavBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.calNavBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Grid del calendario: 7 columnas iguales */
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calDiaHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  color: var(--faint);
+  text-transform: uppercase;
+}
+
+.calDia {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--text);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms, color 120ms, box-shadow 120ms;
+}
+
+.calDia:hover:not(:disabled) {
+  background: var(--surface2);
+  border-color: var(--lineStrong);
+}
+
+.calDia:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Día fuera del mes: celda vacía, no interactiva */
+.calDiaFuera {
+  min-height: 40px;
+}
+
+/* Día deshabilitado (sin horario o cerrado) */
+.calDiaDeshabilitado {
+  color: var(--faint);
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Hoy: borde inferior sutil */
+.calDiaHoy {
+  border-bottom-color: var(--dim);
+}
+
+/* Día seleccionado: borde neón + glow */
+.calDiaSeleccionado {
+  background: var(--surface2);
+  border-color: var(--neon);
+  box-shadow: var(--shadow-glow-green);
+  color: var(--text);
+}
+
+/* Punto LED para apertura excepcional */
+.puntoApertura {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--neon);
+  box-shadow: 0 0 4px 1px var(--glowGreen);
+}

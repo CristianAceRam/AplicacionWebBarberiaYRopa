@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.constants import DIAS_MAX_RESERVA
 from app.database import get_db
 from app.dependencies import get_usuario_actual, solo_admin
-from app.models import Cita, EstadoCita, ExcepcionFecha, TipoExcepcion, Usuario
+from app.models import Cita, EstadoCita, ExcepcionFecha, TipoExcepcion, TramoApertura, Usuario
 from app.schemas import ExcepcionFechaCreate, ExcepcionFechaRead
 
 router = APIRouter(tags=["excepciones"])
@@ -33,7 +33,6 @@ def listar_excepciones_proximas(
         .filter(
             ExcepcionFecha.fecha >= today_madrid,
             ExcepcionFecha.fecha <= limite,
-            ExcepcionFecha.tipo == TipoExcepcion.cerrado,
         )
         .order_by(ExcepcionFecha.fecha)
         .all()
@@ -47,19 +46,32 @@ def crear_excepcion(
     db: Session = Depends(get_db),
 ):
     if db.query(ExcepcionFecha).filter_by(fecha=datos.fecha).first():
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Esa fecha ya está cerrada")
-
-    n_citas = db.query(Cita).filter(
-        Cita.fecha == datos.fecha, Cita.estado == EstadoCita.activa
-    ).count()
-    if n_citas:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f"No se puede cerrar: hay {n_citas} cita(s) activa(s) ese día",
+            detail="Esa fecha ya tiene una excepción registrada",
         )
 
-    exc = ExcepcionFecha(fecha=datos.fecha, tipo=TipoExcepcion.cerrado)
+    if datos.tipo == "cerrado":
+        n_citas = db.query(Cita).filter(
+            Cita.fecha == datos.fecha, Cita.estado == EstadoCita.activa
+        ).count()
+        if n_citas:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"No se puede cerrar: hay {n_citas} cita(s) activa(s) ese día",
+            )
+
+    exc = ExcepcionFecha(fecha=datos.fecha, tipo=TipoExcepcion(datos.tipo))
     db.add(exc)
+    db.flush()
+
+    for t in datos.tramos:
+        db.add(TramoApertura(
+            excepcion_id=exc.id,
+            hora_apertura=t.hora_apertura,
+            hora_cierre=t.hora_cierre,
+        ))
+
     db.commit()
     db.refresh(exc)
     return exc
@@ -74,6 +86,20 @@ def eliminar_excepcion(
     exc = db.get(ExcepcionFecha, excepcion_id)
     if exc is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Excepción no encontrada")
+
+    if exc.tipo == TipoExcepcion.abierto:
+        n_citas = db.query(Cita).filter(
+            Cita.fecha == exc.fecha, Cita.estado == EstadoCita.activa
+        ).count()
+        if n_citas:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    f"No se puede borrar la apertura: hay {n_citas} cita(s) activa(s) ese día. "
+                    "Cancélalas primero."
+                ),
+            )
+
     db.delete(exc)
     db.commit()
     return exc

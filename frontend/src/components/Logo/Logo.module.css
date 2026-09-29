@@ -1,0 +1,62 @@
+.logo {
+  position: relative; /* contiene el canvas MetallicWordmark (position: absolute) */
+  display: inline-flex;
+  align-items: center;
+  /* Glow blanco aplicado al SVG inline — sigue el trazado de los paths */
+  filter: var(--filter-glow-white);
+  transition: filter 200ms ease;
+}
+
+/* Canvas del shader metálico: superpone exactamente el SVG wordmark */
+.canvasOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Cuando entra en viewport: intensifica el glow */
+.logo--visible {
+  filter: var(--filter-glow-white-strong);
+}
+
+.logo svg {
+  display: block;
+  height: auto;
+}
+
+/* Tamaño md — barra de nav, header */
+.logo--md svg {
+  width: 120px;
+}
+
+/* Tamaño lg — hero, entrada */
+.logo--lg svg {
+  width: 200px;
+}
+
+/* Wordmark en hero (lg): necesita ancho generoso para que el lettering graffiti sea legible.
+   min() mantiene proportionality en móvil pequeño. */
+.logo--wordmark.logo--lg svg {
+  width: min(88vw, 360px);
+}
+
+/* Tamaño sm — marca compacta para contextos muy reducidos */
+.logo--sm svg {
+  width: 72px;
+}
+
+/* Symbol — marca funcional, callada, siempre glow base.
+   fill override: neutraliza fill="#000000" del SVG (invisible sobre fondo oscuro sin esto).
+   color fijo: evita que <Link> transmita hover color al SVG. */
+.logo--symbol {
+  color: var(--text);
+}
+
+.logo--symbol svg {
+  fill: var(--text);
+}
+
+/* Wordmark — pieza de hero; la intensificación viene de .logo--visible vía JSX. */
+/* .logo--wordmark: sin regla CSS propia — fill:#ffffff del SVG ya es correcto. */

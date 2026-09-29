@@ -1,0 +1,186 @@
+.wrap {
+  padding: 1.5rem 1.25rem 3rem;
+  max-width: 680px;
+}
+
+/* ── Cabecera ── */
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.titulo {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+  margin: 0;
+}
+
+/* ── Filtros ── */
+
+.filtros {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.pill {
+  height: 36px;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface2);
+  color: var(--dim);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+  white-space: nowrap;
+}
+
+.pill:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.pillActivo {
+  border-color: var(--neon);
+  color: var(--neon);
+  background: rgba(11, 179, 41, 0.06);
+}
+
+@media (hover: hover) {
+  .pill:not(.pillActivo):hover {
+    border-color: var(--dim);
+    color: var(--text);
+  }
+}
+
+/* ── Vacío ── */
+
+.vacio {
+  color: var(--faint);
+  padding: 2rem 0;
+  margin: 0;
+  font-size: var(--fs-body);
+}
+
+/* ── Lista ── */
+
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Tarjeta ── */
+
+.tarjeta {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--rlg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tarjetaInactiva .infoTexto {
+  opacity: 0.55;
+}
+
+/* ── Info ── */
+
+.infoTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.infoFila {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nombre {
+  font-weight: var(--fw-medium);
+  color: var(--text);
+  font-size: var(--fs-body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.metaFila {
+  display: flex;
+  align-items: baseline;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.duracion {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--dim);
+}
+
+.precio {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--dim);
+}
+
+/* ── Badges ── */
+
+.badgeActivo,
+.badgeInactivo {
+  display: inline-block;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.45rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badgeActivo {
+  background: rgba(11, 179, 41, 0.08);
+  border: 1px solid var(--neon);
+  color: var(--neon);
+}
+
+.badgeInactivo {
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  color: var(--faint);
+}
+
+/* ── Acciones ── */
+
+.acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── Error toggle ── */
+
+.errorToggle {
+  font-size: var(--fs-small);
+  color: var(--error);
+  margin: 0;
+}

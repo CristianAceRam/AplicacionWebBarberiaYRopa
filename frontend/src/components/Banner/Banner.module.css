@@ -1,0 +1,113 @@
+.banner {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+/* ── Contenedor de una cinta ── */
+.stripWrapper {
+  overflow: hidden;
+  cursor: default;
+  /* Máscara que funde los bordes para el efecto de loop visual */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 6%,
+    black 94%,
+    transparent 100%
+  );
+}
+
+/* ── Track animado (transform duplicado para marquee sin salto) ── */
+.track {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: max-content;
+  animation: marquee 22s linear infinite;
+}
+
+.track--reverse {
+  animation-direction: reverse;
+}
+
+.track--paused {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .track--reverse {
+    animation: none;
+  }
+}
+
+/* ── Ítems de redes sociales ── */
+.redItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: var(--dim);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  transition: color 120ms, border-color 120ms;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .redItem:hover {
+    color: var(--text);
+    border-color: var(--lineStrong);
+  }
+}
+
+.redItem:active {
+  color: var(--text);
+  border-color: var(--lineStrong);
+}
+
+.redItem:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  color: var(--text);
+}
+
+.redLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-mono);
+}
+
+/* ── Imágenes de galería ── */
+.galeriaImg {
+  width: 160px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+  display: block;
+}
+
+/* ── Placeholders π cuando la galería está vacía ── */
+.piPlaceholder {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  color: var(--faint);
+  padding: 0 1.5rem;
+  line-height: 110px;
+  flex-shrink: 0;
+  user-select: none;
+}

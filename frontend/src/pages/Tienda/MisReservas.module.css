@@ -1,0 +1,145 @@
+.seccion {
+  padding: 1.25rem;
+}
+
+.titulo {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Lista ────────────────────────────────────────────────────── */
+
+.lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .lista {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+}
+
+/* ── Tarjeta ──────────────────────────────────────────────────── */
+
+.tarjeta {
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 1rem;
+  transition: border-color 150ms;
+}
+
+/* Atendida: acento izquierdo verde semántico */
+.tarjeta[data-estado='atendida'] {
+  border-left: 2px solid var(--success);
+}
+
+/* Cancelada: atenuada — visible en historial, menos prominente */
+.tarjeta[data-estado='cancelada'] {
+  opacity: 0.6;
+}
+
+/* ── Fila estado ──────────────────────────────────────────────── */
+
+.estadoFila {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  margin-bottom: 0.5rem;
+}
+
+.punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.estadoLabel {
+  text-transform: uppercase;
+}
+
+.fecha {
+  margin-left: auto;
+  color: var(--faint);
+}
+
+/* ── Datos prenda ─────────────────────────────────────────────── */
+
+.nombrePrenda {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semi);
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--dim);
+}
+
+.sep {
+  margin: 0 0.5rem;
+  color: var(--faint);
+}
+
+/* ── Área de acción ───────────────────────────────────────────── */
+
+.accion {
+  margin-top: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.confirmTexto {
+  font-size: var(--fs-small);
+  color: var(--dim);
+}
+
+.confirmBotones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.errorInline {
+  font-size: var(--fs-small);
+  color: var(--error);
+}
+
+/* ── Estado vacío ─────────────────────────────────────────────── */
+
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.irCatalogo {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--letter-mono);
+  color: var(--neon);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.irCatalogo:hover {
+  text-decoration: underline;
+}

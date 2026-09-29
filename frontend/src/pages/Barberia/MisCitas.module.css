@@ -1,0 +1,151 @@
+.seccion {
+  padding: 1.25rem;
+}
+
+.titulo {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Grupos ───────────────────────────────────────────────────── */
+
+.grupoLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.grupoLabel:first-of-type {
+  margin-top: 0;
+}
+
+/* ── Lista ────────────────────────────────────────────────────── */
+
+.lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .lista {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+}
+
+.listaAtenuada {
+  opacity: 0.55;
+}
+
+/* ── Tarjeta ──────────────────────────────────────────────────── */
+
+.tarjeta {
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 1rem;
+}
+
+/* Acento lateral blanco en las citas próximas (Reservada) */
+.tarjetaProxima {
+  border-left: 2px solid var(--text);
+}
+
+/* ── Fila estado ──────────────────────────────────────────────── */
+
+.estadoFila {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  margin-bottom: 0.5rem;
+}
+
+.punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.estadoLabel {
+  text-transform: uppercase;
+}
+
+.fechaHora {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  color: var(--dim);
+}
+
+/* ── Datos cita ───────────────────────────────────────────────── */
+
+.nombreServicio {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semi);
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+/* ── Área de acción ───────────────────────────────────────────── */
+
+.accion {
+  margin-top: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.confirmTexto {
+  font-size: var(--fs-small);
+  color: var(--dim);
+}
+
+.confirmBotones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.errorInline {
+  font-size: var(--fs-small);
+  color: var(--error);
+}
+
+/* ── Estado vacío ─────────────────────────────────────────────── */
+
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+}
+
+.irReservar {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--letter-mono);
+  color: var(--neon);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.irReservar:hover {
+  text-decoration: underline;
+}

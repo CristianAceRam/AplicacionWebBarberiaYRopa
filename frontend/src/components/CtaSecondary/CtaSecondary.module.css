@@ -1,0 +1,54 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem; /* toque ≥44px */
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface2);
+  color: var(--dim);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms, background-color 150ms;
+  white-space: nowrap;
+}
+
+.btn:not(:disabled):hover {
+  border-color: var(--lineStrong);
+  color: var(--text);
+}
+
+/* Focus visible heredado de theme.css global (:focus-visible) */
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Variante destructiva */
+.danger {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.danger:not(:disabled):hover {
+  background-color: rgba(255, 107, 107, 0.08);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* Tamaño compacto para confirmaciones inline */
+.sm {
+  min-height: 2.25rem;
+  padding: 0.25rem 0.875rem;
+  font-size: var(--fs-small);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}

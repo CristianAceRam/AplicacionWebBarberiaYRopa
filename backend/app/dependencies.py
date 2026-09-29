@@ -47,3 +47,17 @@ def solo_admin(usuario: Usuario = Depends(get_usuario_actual)) -> Usuario:
             detail="Acceso reservado a administradores",
         )
     return usuario
+
+
+def get_usuario_opcional(
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+    db: Session = Depends(get_db),
+) -> Usuario | None:
+    """Igual que get_usuario_actual pero devuelve None en lugar de 401 cuando no hay token."""
+    if not credentials:
+        return None
+    try:
+        payload = decode_access_token(credentials.credentials)
+    except jwt.InvalidTokenError:
+        return None
+    return db.get(Usuario, int(payload["sub"]))

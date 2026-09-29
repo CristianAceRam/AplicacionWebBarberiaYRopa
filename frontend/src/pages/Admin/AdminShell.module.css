@@ -1,0 +1,254 @@
+.adminWrap {
+  position: relative;
+}
+
+/* ── Overlay ─────────────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* Oculto en desktop — el drawer es fijo y no hay hamburguesa */
+@media (min-width: 768px) {
+  .overlay {
+    display: none;
+  }
+}
+
+/* ── Cajón lateral ───────────────────────────────────────────────────── */
+
+.drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  z-index: 200;
+  background: var(--surface);
+  border-right: 1px solid var(--neon);
+  box-shadow: var(--shadow-glow-green);
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 250ms ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawerAbierto {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    transition: none;
+  }
+}
+
+/* Header del cajón — logo + etiqueta ADMIN */
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.drawerHeader a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.adminLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  text-transform: uppercase;
+  color: var(--neon);
+}
+
+/* Nav agrupado */
+.drawerNav {
+  list-style: none;
+  flex: 1;
+  padding: 0.75rem 0;
+  margin: 0;
+}
+
+.grupoWrap {
+  margin-bottom: 0.25rem;
+}
+
+.grupoLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  text-transform: uppercase;
+  color: var(--faint);
+  padding: 0.5rem 1.25rem 0.25rem;
+  margin: 0;
+}
+
+.grupoItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ítem de sección */
+.navItem {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 1.25rem;
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  color: var(--dim);
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms, background 150ms;
+  box-sizing: border-box;
+}
+
+@media (hover: hover) {
+  .navItem:hover {
+    color: var(--text);
+    background: rgba(11, 179, 41, 0.04);
+  }
+}
+
+.navItem:active {
+  color: var(--text);
+}
+
+.navItem:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r);
+}
+
+/* Activo — LED izquierdo encendido */
+.navItemActivo {
+  color: var(--text);
+  border-left-color: var(--neon);
+  background: rgba(11, 179, 41, 0.06);
+}
+
+/* ── Área de trabajo ─────────────────────────────────────────────────── */
+
+.workArea {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.workHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 56px;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* Botón hamburguesa */
+.menuBtn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  border-radius: var(--r);
+  color: var(--dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 150ms;
+}
+
+@media (hover: hover) {
+  .menuBtn:hover {
+    color: var(--text);
+  }
+}
+
+.menuBtn:active {
+  color: var(--text);
+}
+
+.menuBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Título de la sección activa */
+.workTitulo {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semi);
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.workContent {
+  flex: 1;
+  padding: 1.25rem;
+}
+
+/* ── Placeholder ─────────────────────────────────────────────────────── */
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 200px;
+  color: var(--faint);
+}
+
+.placeholderTitulo {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.placeholderSub {
+  font-size: var(--fs-small);
+  margin: 0;
+}
+
+/* ── Desktop ≥768px: cajón siempre visible ───────────────────────────── */
+
+@media (min-width: 768px) {
+  .drawer {
+    transform: translateX(0);
+  }
+
+  .workArea {
+    margin-left: 280px;
+  }
+
+  .menuBtn {
+    display: none;
+  }
+}

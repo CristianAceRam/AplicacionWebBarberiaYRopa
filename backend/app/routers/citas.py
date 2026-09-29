@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.constants import DIAS_MAX_RESERVA, FRANJA_MINUTOS
 from app.database import get_db
 from app.dependencies import get_usuario_actual, solo_admin
-from app.models import Cita, EstadoCita, ExcepcionFecha, FranjaOcupada, HorarioPeluquero, Rol, Servicio, TipoExcepcion, Usuario
+from app.models import Cita, EstadoCita, ExcepcionFecha, FranjaOcupada, HorarioPeluquero, Rol, Servicio, TipoExcepcion, TramoApertura, Usuario
 from app.notificaciones.telegram import enviar_aviso_peluquero
 from app.rate_limit import get_real_ip, limiter
 from app.schemas import CitaCreate, CitaRead
@@ -113,13 +113,21 @@ def crear_cita(
             detail="Ese día está cerrado y no admite reservas",
         )
 
-    # 3. Horario del día (todos los tramos)
-    tramos = (
-        db.query(HorarioPeluquero)
-        .filter_by(dia_semana=datos.fecha.weekday())
-        .order_by(HorarioPeluquero.hora_apertura)
-        .all()
-    )
+    # 2c. Apertura excepcional: sus tramos sustituyen al horario semanal
+    apertura_exc = db.query(ExcepcionFecha).filter_by(
+        fecha=datos.fecha, tipo=TipoExcepcion.abierto
+    ).first()
+    if apertura_exc:
+        tramos = apertura_exc.tramos
+    else:
+        # 3. Horario semanal del día
+        tramos = (
+            db.query(HorarioPeluquero)
+            .filter_by(dia_semana=datos.fecha.weekday())
+            .order_by(HorarioPeluquero.hora_apertura)
+            .all()
+        )
+
     if not tramos:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,

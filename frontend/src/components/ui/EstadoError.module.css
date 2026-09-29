@@ -1,0 +1,22 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1.25rem;
+  text-align: center;
+}
+
+.titulo {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semi);
+  color: var(--error);
+}
+
+.subtexto {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--dim);
+}

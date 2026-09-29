@@ -1,0 +1,183 @@
+/* ═══════════════════════════════════════════════════════════════
+   theme.css — Fuente de verdad del diseño πίστη
+   Contiene: @font-face · tokens · motor de luz LED (@keyframes)
+   Importado UNA VEZ en main.jsx. Nada de tokens fuera de aquí.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Fuentes self-hosted (RGPD: sin petición a terceros) ── */
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./assets/fonts/HankenGrotesk-variable.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/SpaceMono-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/SpaceMono-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ── 2. Reset mínimo ─────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 3. Tokens de color (dark-only) ─────────────────────────── */
+
+:root {
+  /* Fondos */
+  --bg:       #0A0B0A;
+  --surface:  #121412;
+  --surface2: #191C19;
+
+  /* Bordes */
+  --line:       #262B26;
+  --lineStrong: #39403A;
+
+  /* Texto */
+  --text:  #F4F6F3;
+  --dim:   #A8AFA6;
+  --faint: #787F76; /* WCAG 4.2:1 — solo deshabilitados/decoración, no texto de cuerpo */
+
+  /* Acento neón — SOLO acento (bordes, CTAs, iconos). Nunca texto de cuerpo. */
+  --neon:    #0bb329;
+  --neonDim: #1ad13c;
+  --onNeon:  #0A0B0A; /* tinta sobre relleno neón: 7.0:1 AA */
+
+  /* Semánticos (hue distinto del verde de marca) */
+  --success: #6FD08C;
+  --error:   #FF6B6B;
+  --warning: #FFC24B;
+  --info:    #79A9FF;
+
+  /* ── 4. Motor de luz LED ─────────────────────────────────── */
+
+  /* Colores de glow crudos */
+  --glowWhite: rgba(255, 255, 255, .9);
+  --glowGreen: rgba(11, 179, 41, .5);
+
+  /* Sombras compuestas — usan los colores de glow */
+  --shadow-glow-green: 0 0 0 1px var(--neon), 0 0 8px 2px var(--glowGreen);
+  --shadow-focus:      0 0 0 2px var(--bg), 0 0 0 4px var(--neon), 0 0 10px 2px var(--glowGreen);
+
+  /* Filtros SVG (siguen el trazado, no la caja) */
+  --filter-glow-white:        drop-shadow(0 0 5px var(--glowWhite));
+  --filter-glow-white-strong: drop-shadow(0 0 10px var(--glowWhite))
+                              drop-shadow(0 0 3px rgba(255, 255, 255, .6));
+
+  /* ── 5. Tipografía ───────────────────────────────────────── */
+
+  --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+
+  /* Escala (base móvil) */
+  --fs-h1:    2rem;      /* 32px */
+  --fs-h2:    1.5rem;    /* 24px */
+  --fs-h3:    1.25rem;   /* 20px */
+  --fs-body:  1rem;      /* 16px — mínimo de cuerpo en móvil */
+  --fs-small: 0.875rem;  /* 14px */
+  --fs-mono:  0.6875rem; /* 11px — etiquetas mono en versalitas */
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+  --fw-black:   800;
+
+  --letter-mono: 0.14em; /* tracking etiquetas mono */
+
+  /* ── 6. Forma ────────────────────────────────────────────── */
+
+  --r:     3px;   /* angular; inputs, botones, badges */
+  --rlg:   8px;   /* tarjetas, nav panel, modales */
+  --rpill: 999px; /* pills de estado, chips de talla */
+
+  /* ── 7. Breakpoints (solo referencia — usar en media queries) */
+  /* --bp-md: 768px   tablet */
+  /* --bp-lg: 1024px  desktop */
+}
+
+/* ── 8. Base global ──────────────────────────────────────────── */
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+/* Foco de teclado — aplica a todos los elementos interactivos */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--r);
+}
+
+/* ── 9. Motor de luz: @property + @keyframes ────────────────── */
+
+/* Habilita animación de conic-gradient en el CTA.
+   Fallback para Safari <15.4 / Firefox <128: borde estático verde. */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Luz que recorre el borde del CTA principal */
+@keyframes ctaBorderRotate {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+
+/* ── 10. prefers-reduced-motion ─────────────────────────────── */
+
+/* Decisión: el fondo (pulsos ambientales) se apaga completamente.
+   Los elementos de interfaz LED (bordes, indicador, glow del logo)
+   aparecen encendidos y fijos — §11 DESIGN.md.
+   La animación del CTA también se pausa (no es UI crítica). */
+@media (prefers-reduced-motion: reduce) {
+  /* Desactiva TODOS los @keyframes de este motor */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

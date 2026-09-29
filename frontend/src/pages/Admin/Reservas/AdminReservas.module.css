@@ -1,0 +1,178 @@
+.wrap {
+  padding: 1.5rem 1.25rem 3rem;
+  max-width: 560px;
+}
+
+/* ── Cabecera ── */
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.titulo {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+  margin: 0;
+}
+
+/* ── Grupos de nivel ── */
+
+.nivelGroup {
+  margin-bottom: 2rem;
+}
+
+.nivelLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 0 0 0.75rem;
+}
+
+/* ── Lista ── */
+
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Tarjetas ── */
+
+.tarjeta {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--rlg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  overflow: hidden;
+}
+
+.tarjetaPendiente {
+  border-left: 2px solid var(--warning);
+}
+
+.tarjetaCancelada {
+  opacity: 0.45;
+}
+
+/* ── Estado fila (dot + label) ── */
+
+.estadoFila {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+}
+
+.punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.estadoLabel {
+  text-transform: uppercase;
+}
+
+/* ── Contenido de la tarjeta ── */
+
+.prendaFila {
+  font-weight: var(--fw-semi);
+  color: var(--text);
+  font-size: var(--fs-body);
+  margin: 0;
+}
+
+.talla {
+  color: var(--dim);
+  font-weight: var(--fw-medium);
+}
+
+.clienteNombre {
+  color: var(--text);
+  font-size: var(--fs-body);
+  margin: 0;
+}
+
+.metaFila {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.telLink {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: var(--fs-small);
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .telLink:hover {
+    text-decoration: underline;
+    color: var(--text);
+  }
+}
+
+.fecha {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--letter-mono);
+  color: var(--dim);
+}
+
+/* ── Acciones ── */
+
+.acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
+}
+
+/* ── Error por ítem ── */
+
+.errorAccionItem {
+  font-size: var(--fs-small);
+  color: var(--error);
+  margin: 0;
+}
+
+/* ── Estado vacío ── */
+
+.estadoVacio {
+  padding: 2.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.estadoVacio p {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--faint);
+}
+
+.estadoVacio p:first-child {
+  color: var(--dim);
+  font-weight: var(--fw-medium);
+}

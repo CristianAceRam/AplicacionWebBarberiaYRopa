@@ -1,0 +1,193 @@
+@keyframes viewEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hub {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  animation: viewEnter 200ms ease-out both;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* stretch evita el quirk Chrome/Safari donde width:100% en hijos con align-self:center se resuelve contra el contenido en vez del viewport */
+  padding: 2rem 0 1rem;
+  box-sizing: border-box;
+}
+
+/* ── Cabecera con logo + acceder/chip ── */
+/* Mobile-first: column flex (wordmark centrado, botón debajo a la derecha).
+   ≥768px: grid 3 columnas (spacer | wordmark | acceder/chip). */
+.hubHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1.5rem 1.25rem 1.5rem;
+}
+
+.hubHeaderSpacer {
+  display: none; /* solo necesario en el grid de desktop */
+}
+
+/* ── Slot del chip de sesión (columna derecha del header) ── */
+.chipSlot {
+  justify-self: end;     /* grid desktop — alinea a la derecha */
+  align-self: flex-end;  /* flex column mobile */
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Header desktop: restaura grid 3 columnas ── */
+@media (min-width: 768px) {
+  .hubHeader {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0;
+    padding-bottom: 2.5rem;
+  }
+
+  .hubHeaderSpacer {
+    display: block;
+  }
+
+  .chipSlot {
+    align-self: unset;
+  }
+}
+
+/* ── Sección de los dos mundos ── */
+.worlds {
+  width: 100%;
+  max-width: 600px;
+  margin-inline: auto; /* centra la sección ya que .hub usa align-items:stretch */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-inline: 1rem; /* el hub ya no tiene padding horizontal; las tarjetas necesitan aire */
+}
+
+@media (min-width: 768px) {
+  .worlds {
+    flex-direction: row;
+    max-width: 800px;
+  }
+}
+
+/* ── Entrada a cada mundo ── */
+.worldEntry {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1.5rem;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  transition: border-color 160ms, box-shadow 160ms, color 160ms;
+  min-height: 160px;
+  text-align: center;
+  position: relative; /* contiene el ::after de respiración */
+}
+
+/* Pulso "respiración": borde+glow verde que late a ~3.5s.
+   Usa ::after con opacity para no conflictuar con los estilos
+   de border/box-shadow del elemento principal en hover/active. */
+.worldEntry::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--r);
+  border: 1px solid var(--neon);
+  box-shadow: var(--shadow-glow-green);
+  opacity: 0;
+  pointer-events: none;
+  animation: worldBreath 3.5s ease-in-out infinite;
+}
+
+@keyframes worldBreath {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: 1; }
+}
+
+@media (hover: hover) {
+  .worldEntry:hover {
+    border-color: var(--neon);
+    box-shadow: var(--shadow-glow-green);
+    color: var(--text);
+  }
+  /* En hover desktop, la respiración se detiene en el pico */
+  .worldEntry:hover::after {
+    animation-play-state: paused;
+    opacity: 1;
+  }
+}
+
+/* Feedback táctil: mientras el dedo toca, salta al pico */
+.worldEntry:active {
+  border-color: var(--neon);
+  box-shadow: var(--shadow-glow-green);
+}
+.worldEntry:active::after {
+  animation-play-state: paused;
+  opacity: 1;
+}
+
+.worldEntry:focus-visible {
+  outline: none;
+  border-color: var(--neon);
+  box-shadow: var(--shadow-focus);
+}
+
+/* prefers-reduced-motion: borde verde fijo sin latido */
+@media (prefers-reduced-motion: reduce) {
+  .worldEntry::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ── Icono del mundo ── */
+.worldIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--neon);
+  filter: var(--filter-glow-white);
+}
+
+@media (hover: hover) {
+  .worldEntry:hover .worldIcon {
+    filter: var(--filter-glow-white-strong);
+  }
+}
+
+.worldEntry:focus-visible .worldIcon,
+.worldEntry:active .worldIcon {
+  filter: var(--filter-glow-white-strong);
+}
+
+/* ── Texto del mundo ── */
+.worldTitle {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  color: inherit;
+}
+
+.worldSub {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--dim);
+  font-weight: var(--fw-regular);
+}

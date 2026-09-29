@@ -11,6 +11,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from app.config import settings
 from app.rate_limit import limiter
 from app.routers import auth, citas, disponibilidad, excepciones, horario, servicios, usuarios
+from app.routers import cloudinary_router, galeria, prendas, reservas_tienda, stats
 
 _STATIC_SWAGGER = Path(__file__).parent / "static" / "swagger-ui"
 _STATIC_REDOC   = Path(__file__).parent / "static" / "redoc"
@@ -91,8 +92,16 @@ app.include_router(citas.router)
 app.include_router(excepciones.router)
 
 # ── Fase 3: módulo tienda "Reserva sencilla" ──────────────────────────────
-# from app.routers.tienda import router as tienda_router
-# app.include_router(tienda_router)
+# Cloudinary: literal /cloudinary/firma antes de cualquier ruta con param
+app.include_router(cloudinary_router.router)
+# Prendas: GET /prendas (literal) antes de GET /prendas/{id}
+app.include_router(prendas.router)
+# Reservas tienda: GET /reservas/mias (literal) antes de /reservas/{id}/...
+app.include_router(reservas_tienda.router)
+# Galería: GET /galeria (literal) + PUT /galeria/orden (literal) antes de /galeria/{id}
+app.include_router(galeria.router)
+# Admin — estadísticas del dashboard
+app.include_router(stats.router)
 
 # ---------------------------------------------------------------------------
 # Documentación interactiva local (solo en desarrollo)

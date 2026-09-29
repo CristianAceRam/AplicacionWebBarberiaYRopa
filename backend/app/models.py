@@ -1,5 +1,5 @@
 import enum
-from datetime import date, time
+from datetime import date, datetime, time
 from decimal import Decimal
 
 from app.constants import DURACION_MAX_MINUTOS, FRANJA_MINUTOS
@@ -7,6 +7,7 @@ from sqlalchemy import (
     Boolean,
     CheckConstraint,
     Date,
+    DateTime,
     Enum as SAEnum,
     ForeignKey,
     Integer,
@@ -15,6 +16,7 @@ from sqlalchemy import (
     String,
     Time,
     UniqueConstraint,
+    func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -133,7 +135,7 @@ class FranjaOcupada(Base):
 
 class TipoExcepcion(str, enum.Enum):
     cerrado = "cerrado"
-    # Futuro: horario_especial = "horario_especial"
+    abierto = "abierto"
 
 
 class ExcepcionFecha(Base):
@@ -148,3 +150,110 @@ class ExcepcionFecha(Base):
                 SAEnum(TipoExcepcion, native_enum=False, length=20),
                 default=TipoExcepcion.cerrado,
             )
+
+    tramos: Mapped[list["TramoApertura"]] = relationship(
+        back_populates="excepcion",
+        cascade="all, delete-orphan",
+        order_by="TramoApertura.hora_apertura",
+    )
+
+
+class TramoApertura(Base):
+    __tablename__ = "tramos_apertura"
+    __table_args__ = (
+        CheckConstraint("hora_apertura < hora_cierre", name="ck_tramo_apertura_rango"),
+    )
+
+    id           : Mapped[int]  = mapped_column(primary_key=True)
+    excepcion_id : Mapped[int]  = mapped_column(
+                       ForeignKey("excepcion_fecha.id", ondelete="CASCADE")
+                   )
+    hora_apertura: Mapped[time] = mapped_column(Time)
+    hora_cierre  : Mapped[time] = mapped_column(Time)
+
+    excepcion: Mapped["ExcepcionFecha"] = relationship(back_populates="tramos")
+
+
+# ---------------------------------------------------------------------------
+# Tienda — "reserva sencilla"
+# ---------------------------------------------------------------------------
+
+class Prenda(Base):
+    __tablename__ = "prendas"
+
+    id          : Mapped[int]        = mapped_column(primary_key=True)
+    nombre      : Mapped[str]        = mapped_column(String(200))
+    descripcion : Mapped[str]        = mapped_column(String(2000))
+    precio      : Mapped[Decimal]    = mapped_column(Numeric(8, 2))
+    categoria   : Mapped[str | None] = mapped_column(String(100), nullable=True)
+    activo      : Mapped[bool]       = mapped_column(Boolean, default=True, nullable=False)
+
+    tallas   : Mapped[list["TallaPrenda"]]   = relationship(back_populates="prenda", cascade="all, delete-orphan")
+    imagenes : Mapped[list["ImagenPrenda"]]  = relationship(
+                   back_populates="prenda", cascade="all, delete-orphan",
+                   order_by="ImagenPrenda.posicion",
+               )
+    reservas : Mapped[list["ReservaPrenda"]] = relationship(back_populates="prenda")
+
+
+class TallaPrenda(Base):
+    __tablename__ = "tallas_prenda"
+    __table_args__ = (UniqueConstraint("prenda_id", "talla", name="uq_talla_prenda"),)
+
+    id         : Mapped[int]  = mapped_column(primary_key=True)
+    prenda_id  : Mapped[int]  = mapped_column(ForeignKey("prendas.id", ondelete="CASCADE"))
+    talla      : Mapped[str]  = mapped_column(String(20))
+    disponible : Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+
+    prenda: Mapped["Prenda"] = relationship(back_populates="tallas")
+
+
+class ImagenPrenda(Base):
+    __tablename__ = "imagenes_prenda"
+
+    id        : Mapped[int] = mapped_column(primary_key=True)
+    prenda_id : Mapped[int] = mapped_column(ForeignKey("prendas.id", ondelete="CASCADE"))
+    url       : Mapped[str] = mapped_column(String(512))
+    public_id : Mapped[str] = mapped_column(String(200))
+    posicion  : Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+    prenda: Mapped["Prenda"] = relationship(back_populates="imagenes")
+
+
+class EstadoReservaPrenda(str, enum.Enum):
+    pendiente = "pendiente"
+    atendida  = "atendida"
+    cancelada = "cancelada"
+
+
+class ReservaPrenda(Base):
+    __tablename__ = "reservas_prenda"
+
+    id         : Mapped[int]                    = mapped_column(primary_key=True)
+    cliente_id : Mapped[int]                    = mapped_column(ForeignKey("usuarios.id"))
+    prenda_id  : Mapped[int]                    = mapped_column(ForeignKey("prendas.id"))
+    talla      : Mapped[str]                    = mapped_column(String(20))
+    estado     : Mapped[EstadoReservaPrenda]    = mapped_column(
+                     SAEnum(EstadoReservaPrenda, native_enum=False, length=15),
+                     default=EstadoReservaPrenda.pendiente,
+                 )
+    creada_en  : Mapped[datetime]               = mapped_column(
+                     DateTime(timezone=True), server_default=func.now()
+                 )
+
+    cliente : Mapped["Usuario"] = relationship()
+    prenda  : Mapped["Prenda"]  = relationship(back_populates="reservas")
+
+
+# ---------------------------------------------------------------------------
+# Galería del banner
+# ---------------------------------------------------------------------------
+
+class GaleriaFoto(Base):
+    __tablename__ = "galeria_fotos"
+
+    id        : Mapped[int]      = mapped_column(primary_key=True)
+    url       : Mapped[str]      = mapped_column(String(512))
+    public_id : Mapped[str]      = mapped_column(String(200))
+    posicion  : Mapped[int]      = mapped_column(Integer, default=0, nullable=False)
+    titulo    : Mapped[str|None] = mapped_column(String(200), nullable=True)

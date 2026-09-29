@@ -120,7 +120,8 @@ def test_anadir_duplicado_409(client, admin_token):
     client.post("/excepciones", json={"fecha": fecha}, headers=_auth(admin_token))
     r = client.post("/excepciones", json={"fecha": fecha}, headers=_auth(admin_token))
     assert r.status_code == 409
-    assert "cerrada" in r.json()["detail"].lower()
+    detail = r.json()["detail"].lower()
+    assert "excepci" in detail or "fecha" in detail
 
 
 def test_anadir_con_cita_activa_409(client, admin_token, db_session):
