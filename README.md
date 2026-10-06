@@ -112,7 +112,7 @@ Está pensada primero para móvil y es responsive. Solo tiene tema oscuro, con u
 ├── docker-compose.yml        # PostgreSQL local
 ├── CLAUDE.md                 # Reglas técnicas del proyecto
 ├── BackendBarberia.md        # Especificación que debe cumplir el backend de citas
-├── DESIGN (1).md             # Dirección de diseño (fuente de verdad visual)
+├── DESIGN.md             # Dirección de diseño (fuente de verdad visual)
 ├── ESTADO_PROYECTO.md        # Estado y continuidad entre sesiones
 └── METODOLOGIA.md            # Forma de trabajo
 ```
