@@ -216,4 +216,4 @@ El detalle está en [`ESTADO_PROYECTO.md`](ESTADO_PROYECTO.md).
 
 ## Autoría
 
-Desarrollado por **AceitunoDev**. Proyecto privado para cliente; todos los derechos reservados.
+Desarrollado por **Cristian Aceituno**. Proyecto privado para cliente; todos los derechos reservados.
